@@ -6,7 +6,8 @@ const url = `mongodb+srv://${config.db.user}:${config.db.password}@cluster0.2xbq
 mongoose
 	.connect(url, {
 		useNewUrlParser: true,
-		useUnifiedTopology: true
+		useUnifiedTopology: true,
+		useCreateIndex: true
 	})
 	.then(() => console.log('Database connected'))
 	.catch((error) => console.log(error));

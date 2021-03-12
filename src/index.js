@@ -1,15 +1,14 @@
-const express = require('express');
-const bodyparser = require('body-parser');
+
+const app = require('express')();
+const { json, urlencoded } = require('body-parser');
 const morgan = require('morgan');
+const userRoutes = require('./features/user-management/routes');
 
-const app = express();
-
-app.use(bodyparser.json());
-
-app.use(bodyparser.urlencoded({ extended: false }));
+app.use(json());
+app.use(urlencoded({ extended: false }));
 app.use(morgan('dev'));
-app.get('/test', (req, res) => {
-	res.status(200).json({ message: 'Test' });
-});
+
+app.use('/api/user', userRoutes);
+
 
 module.exports = app;

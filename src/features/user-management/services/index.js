@@ -25,7 +25,7 @@ async function passwordCorrect({ email, password }) {
 	try {
 		const user = await User.findOne({ email });
 		if (user.password === password)
-			return Promise.resolve({ correct: true });
+			return Promise.resolve({ correct: true, userId: user._id });
 		else return Promise.resolve({ correct: false });
 	} catch (error) {
 		return Promise.reject(error);

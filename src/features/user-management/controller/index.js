@@ -1,4 +1,6 @@
 const { createUser, emailExists, passwordCorrect } = require('../services');
+const config = require('../../../config');
+const jwt = require('jsonwebtoken');
 
 async function register(req, res) {
 	const { body } = req;
@@ -27,12 +29,12 @@ async function authenticate(req, res) {
 	try {
 		const { exists } = await emailExists(body);
 		if (exists) {
-			const { correct } = await passwordCorrect(body);
+			const { correct, userId } = await passwordCorrect(body);
 			if (correct) {
-				//generate jwt here
+				const token = jwt.sign({ userId }, config.jwtSecret);
 				return res.status(200).json({
 					authenticated: true,
-					token: '' + Date.now() + '8&*#@8'
+					token
 				});
 			} else {
 				return res.status(401).json({
@@ -47,9 +49,11 @@ async function authenticate(req, res) {
 	} catch (error) {
 		console.log(error);
 		return res.status(500).json({
-			message: 'INTERNAT_ERROR'
+			message: 'INTERNAL_ERROR'
 		});
 	}
 }
+
+async function uploadProfilePic(req, res) {}
 
 module.exports = { register, authenticate };

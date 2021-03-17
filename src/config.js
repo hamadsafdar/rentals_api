@@ -4,5 +4,6 @@ module.exports = {
 		password: process.env.DB_PASS,
 		user: process.env.DB_USER
 	},
-	environment: process.env.NODE_ENV || 'development'
+	environment: process.env.NODE_ENV || 'development',
+	jwtSecret: process.env.JWT_SECRET
 };

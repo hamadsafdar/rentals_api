@@ -8,7 +8,7 @@ const { authToken } = require('../middlewares');
 // Upload Image
 
 router.post('/register', controller.register);
-router.post('/authenticate', controller.register);
+router.post('/authenticate', controller.authenticate);
 router.patch('/update', authToken, controller.editUser);
 
 module.exports = router;

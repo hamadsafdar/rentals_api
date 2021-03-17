@@ -35,9 +35,9 @@ async function authenticate(req, res) {
 	try {
 		const { exists } = await emailExists(body);
 		if (exists) {
-			const { correct, user } = await passwordCorrect(body);
+			const { correct, userId } = await passwordCorrect(body);
 			if (correct) {
-				const token = jwt.sign({ userId: user._id }, config.jwtSecret, {
+				const token = jwt.sign({ userId }, config.jwtSecret, {
 					expiresIn: '7d'
 				});
 				return res.json({

@@ -27,7 +27,7 @@ async function passwordCorrect({ email, password }) {
 		if (user.password === password)
 			return Promise.resolve({
 				correct: true,
-				user: { ...user, password: undefined }
+				userId: user._id
 			});
 		else return Promise.resolve({ correct: false });
 	} catch (error) {
@@ -48,7 +48,9 @@ async function updateUser({ userId, attributes }) {
 async function getData(userId) {
 	try {
 		//Further data population will be done here.
-		const user = await User.findById(userId).select('name email imageUrl -_id');
+		const user = await User.findById(userId).select(
+			'name email imageUrl -_id'
+		);
 		return Promise.resolve(user);
 	} catch (error) {
 		return Promise.reject(error);

@@ -9,6 +9,7 @@ const { authToken } = require('../middlewares');
 
 router.post('/register', controller.register);
 router.post('/authenticate', controller.authenticate);
+router.get('/', authToken, controller.getUser);
 router.patch('/update', authToken, controller.editUser);
 
 module.exports = router;

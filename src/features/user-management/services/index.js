@@ -25,7 +25,10 @@ async function passwordCorrect({ email, password }) {
 	try {
 		const user = await User.findOne({ email });
 		if (user.password === password)
-			return Promise.resolve({ correct: true, userId: user._id });
+			return Promise.resolve({
+				correct: true,
+				user: { ...user, password: undefined }
+			});
 		else return Promise.resolve({ correct: false });
 	} catch (error) {
 		return Promise.reject(error);
@@ -42,4 +45,20 @@ async function updateUser({ userId, attributes }) {
 	}
 }
 
-module.exports = { createUser, emailExists, passwordCorrect, updateUser };
+async function getData(userId) {
+	try {
+		//Further data population will be done here.
+		const user = await User.findById(userId).select('name email imageUrl -_id');
+		return Promise.resolve(user);
+	} catch (error) {
+		return Promise.reject(error);
+	}
+}
+
+module.exports = {
+	createUser,
+	emailExists,
+	passwordCorrect,
+	updateUser,
+	getData
+};

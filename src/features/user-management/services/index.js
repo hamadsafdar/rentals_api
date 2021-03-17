@@ -32,4 +32,14 @@ async function passwordCorrect({ email, password }) {
 	}
 }
 
-module.exports = { createUser, emailExists, passwordCorrect };
+async function updateUser({ userId, attributes }) {
+	try {
+		//only name and password can be updated. make a check
+		await User.findOneAndUpdate({ _id: userId }, attributes);
+		return Promise.resolve();
+	} catch (error) {
+		return Promise.reject(error);
+	}
+}
+
+module.exports = { createUser, emailExists, passwordCorrect, updateUser };

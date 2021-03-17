@@ -1,4 +1,9 @@
-const { createUser, emailExists, passwordCorrect } = require('../services');
+const {
+	createUser,
+	emailExists,
+	passwordCorrect,
+	updateUser
+} = require('../services');
 const config = require('../../../config');
 const jwt = require('jsonwebtoken');
 
@@ -32,7 +37,7 @@ async function authenticate(req, res) {
 			const { correct, userId } = await passwordCorrect(body);
 			if (correct) {
 				const token = jwt.sign({ userId }, config.jwtSecret);
-				return res.status(200).json({
+				return res.json({
 					authenticated: true,
 					token
 				});
@@ -54,6 +59,15 @@ async function authenticate(req, res) {
 	}
 }
 
-async function uploadProfilePic(req, res) {}
+async function editUser(req, res) {
+	const { body: attributes } = req;
+	try {
+		//may check for user exists or add a middleware
+		await updateUser({ userId: req.user.userId, attributes });
+		return res.sendStatus(200);
+	} catch (error) {
+		return res.status(500).json({ message: 'INTERNAL_ERROR' });
+	}
+}
 
-module.exports = { register, authenticate };
+module.exports = { register, authenticate, editUser };

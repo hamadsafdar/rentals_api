@@ -1,4 +1,3 @@
-
 const app = require('express')();
 const { json, urlencoded } = require('body-parser');
 const morgan = require('morgan');
@@ -10,5 +9,6 @@ app.use(morgan('dev'));
 
 app.use('/api/user', userRoutes);
 
+app.get('/', (req, res) => res.send('Trying to access Rentals FYP'));
 
 module.exports = app;

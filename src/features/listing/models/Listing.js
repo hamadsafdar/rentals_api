@@ -15,4 +15,13 @@ const listingSchema = new Schema(
 	{ timestamps: true }
 );
 
+listingSchema.post(
+	'remove',
+	{ document: true, query: true }, // to run on all remove operations
+	(listing, next) => {
+		//all references should be removed here
+		next();
+	}
+);
+
 module.exports = model('amenity', listingSchema);

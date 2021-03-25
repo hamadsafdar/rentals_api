@@ -5,6 +5,7 @@ const listingSchema = new Schema(
 		description: { type: String, required: true },
 		images: [{ type: String }],
 		rate: { type: Schema.Types.Decimal128, required: true },
+		images: [{ type: String }],
 		guestsLimit: { type: Number, required: true },
 		host: { type: Schema.Types.ObjectId, ref: 'user' },
 		bookings: [{ type: Schema.Types.ObjectId, ref: 'booking' }],

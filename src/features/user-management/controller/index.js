@@ -8,6 +8,7 @@ const {
 const config = require('../../../config');
 const jwt = require('jsonwebtoken');
 const { uploadImage } = require('../../../util');
+const User = require('../model/User');
 
 async function register(req, res) {
 	const { body } = req;
@@ -93,9 +94,13 @@ async function uploadProfilePic(req, res) {
 		file
 	} = req;
 	try {
-		await uploadImage({ file, userId });
+		const imageUrl = await uploadImage({ file, userId });
+		const user = await User.findById(userId);
+		user.imageUrl = imageUrl;
+		await user.save();
 		return res.sendStatus(200);
 	} catch (error) {
+		console.log(error);
 		return res.status(500).json({
 			message: 'INTERNAL_ERROR'
 		});

@@ -8,7 +8,6 @@ const listingSchema = new Schema(
 		images: [{ type: String }],
 		guestsLimit: { type: Number, required: true },
 		host: { type: Schema.Types.ObjectId, ref: 'user' },
-		bookings: [{ type: Schema.Types.ObjectId, ref: 'booking' }],
 		reviews: [{ type: Schema.Types.ObjectId, ref: 'review' }],
 		amenities: [{ type: Schema.Types.ObjectId, ref: 'amenity' }],
 		address: { type: Schema.Types.ObjectId, ref: 'address' }

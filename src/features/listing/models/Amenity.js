@@ -4,7 +4,7 @@ const amenitySchema = new Schema(
 	{
 		title: { type: String, required: true },
 		description: { type: String, required: true },
-		quantiy: { type: Number, default: 0 },
+		quantity: { type: Number, default: 0 },
 		listing: { type: Schema.Types.ObjectId, ref: 'listing' }
 	},
 	{ timestamps: true }

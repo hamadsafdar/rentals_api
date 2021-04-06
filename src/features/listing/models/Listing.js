@@ -2,10 +2,10 @@ const { Schema, model } = require('mongoose');
 
 const listingSchema = new Schema(
 	{
+		title: { type: String, required: true },
 		description: { type: String, required: true },
 		images: [{ type: String }],
 		rate: { type: Schema.Types.Decimal128, required: true },
-		images: [{ type: String }],
 		guestsLimit: { type: Number, required: true },
 		host: { type: Schema.Types.ObjectId, ref: 'user' },
 		reviews: [{ type: Schema.Types.ObjectId, ref: 'review' }],
@@ -24,4 +24,4 @@ listingSchema.post(
 	}
 );
 
-module.exports = model('amenity', listingSchema);
+module.exports = model('listing', listingSchema);

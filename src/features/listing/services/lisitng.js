@@ -1,4 +1,4 @@
-const { Listing, Amenity, Address } = require('../models');
+const { Listing, Amenity, Address, Review } = require('../models');
 
 //TODO: Edit
 //host will also be the creator of listing
@@ -82,7 +82,17 @@ async function getHostedListings(hostId) {
 	}
 }
 
-async function remove({ listingId, hostId }) {}
+async function remove({ listingId, hostId }) {
+	try {
+		await Listing.findOneAndDelete({
+			_id: listingId,
+			host: hostId
+		});
+		return;
+	} catch (error) {
+		throw error;
+	}
+}
 
 async function getRandomListings(hostId) {
 	try {
@@ -102,4 +112,35 @@ async function getRandomListings(hostId) {
 	}
 }
 
-module.exports = { getRandomListings, get, remove, getHostedListings, create };
+async function reviewListing({ listingId, review }) {
+	try {
+		const newReview = new Review({
+			for: listingId,
+			comment: review.comment,
+			author: review.author,
+			rating: review.rating
+		});
+		return await newReview.save();
+	} catch (error) {
+		throw error;
+	}
+}
+
+async function bookListing({ listingId, bookingDetails }) {}
+
+async function getBookingsByListing(listingId) {}
+
+async function getBookingsByUserId(userId) {}
+
+async function getHistory(userId) {}
+
+async function isBookingAvailable({ listingId, bookingDetails }) {}
+
+module.exports = {
+	getRandomListings,
+	get,
+	remove,
+	getHostedListings,
+	create,
+	reviewListing
+};

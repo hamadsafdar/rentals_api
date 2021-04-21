@@ -6,11 +6,11 @@ const bookingSchema = new Schema(
 		end: { type: Date, required: true },
 		status: {
 			type: String,
-			required: true,
-			enum: ['CONFIRMED', 'CANCELLED']
+			enum: ['CONFIRMED', 'CANCELLED', 'COMPLETED', 'STARTED', 'PENIDNG'],
+			default: 'PENDING'
 		},
 		listing: { type: Schema.Types.ObjectId, ref: 'listing' },
-		guest: { type: Schema.Types.ObjectId, ref: 'user' }
+		bookedBy: { type: Schema.Types.ObjectId, ref: 'user' }
 	},
 	{ timestamps: true }
 );

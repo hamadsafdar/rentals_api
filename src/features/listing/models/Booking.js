@@ -10,7 +10,8 @@ const bookingSchema = new Schema(
 			default: 'PENDING'
 		},
 		listing: { type: Schema.Types.ObjectId, ref: 'listing' },
-		bookedBy: { type: Schema.Types.ObjectId, ref: 'user' }
+		bookedBy: { type: Schema.Types.ObjectId, ref: 'user' },
+		host: { type: Schema.Types.ObjectId, ref: 'user' }
 	},
 	{ timestamps: true }
 );

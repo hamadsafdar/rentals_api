@@ -1,6 +1,6 @@
 const { Booking } = require('../models');
 
-const CONSTANTS = Object.freeze({
+const constants = Object.freeze({
 	PENDING: 'PENDING',
 	STARTED: 'STARTED',
 	CONFIRMED: 'CONFIRMED',
@@ -45,4 +45,33 @@ async function changeStatus({ bookingId, updatedStatus }) {
 	}
 }
 
-module.exports = { bookListing, bookingAvailable, changeStatus, CONSTANTS };
+async function getBookingsByUserAndStatus({ userId, status }) {
+	try {
+		const pastBookings = await Booking.find({
+			bookedBy: userId,
+			status
+		})
+			.populate({
+				path: 'listing',
+				select: ''
+			})
+			.populate({
+				path: 'host',
+				select: ''
+			})
+			.exec();
+		return pastBookings;
+	} catch (error) {
+		throw error;
+	}
+}
+
+async function getHostedBookings({ hostId }) {}
+
+module.exports = {
+	bookListing,
+	bookingAvailable,
+	changeStatus,
+	constants,
+	getBookingsByUserAndStatus
+};

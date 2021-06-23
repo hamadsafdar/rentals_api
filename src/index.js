@@ -13,6 +13,6 @@ app.use(morgan('dev'));
 app.use('/api/user', userRoutes);
 app.use('/api/listing', listingRoutes);
 
-app.get('/', (req, res) => res.send('Trying to access Rentals FYP'));
+// app.get('/', (req, res) => res.send('Trying to access Rentals FYP'));
 
 module.exports = app;

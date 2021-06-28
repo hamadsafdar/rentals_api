@@ -1,8 +1,14 @@
 const { Schema, model } = require('mongoose');
 
-const messageSchema = new Schema({
-	author: { type: Schema.Types.ObjectId, ref: 'user' },
-	body: { type: Schema.Types.String }
-});
+const messageSchema = new Schema(
+	{
+		author: { type: Schema.Types.ObjectId, ref: 'user' },
+		body: { type: Schema.Types.String },
+		converstaion: { type: Schema.Types.ObjectId, ref: 'conversation' }
+	},
+	{
+		timestamps: true
+	}
+);
 
-module.export = model('message', messageSchema);
+module.exports = model('message', messageSchema);

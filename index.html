@@ -10,5 +10,14 @@
 	<script src="/socket.io/socket.io.js"></script>
 	<script>
 		const socket = io();
+		socket.emit(
+			'message',
+			{
+				to: 'hamad1@hamad.com',
+				from: 'hamad@hamad.com',
+				body: 'this is a test message'
+			},
+			(messageId) => console.log(messageId, 'Done')
+		);
 	</script>
 </html>

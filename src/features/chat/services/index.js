@@ -1,4 +1,5 @@
 module.exports = {
 	conversation: require('./conversation'),
-	message: require('./message')
+	message: require('./message'),
+	socket: require('./socket')
 };

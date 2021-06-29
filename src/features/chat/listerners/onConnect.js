@@ -1,7 +1,9 @@
-const onMessage = require('../events/onMessage');
+const events = require('../events');
 
 module.exports = (io) => {
 	io.on('connection', (socket) => {
-		onMessage(socket);
+		events.onRegister(socket);
+		events.onMessage(socket);
+		events.onDisconnect(socket);
 	});
 };

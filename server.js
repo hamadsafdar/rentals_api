@@ -18,8 +18,4 @@ server.listen(PORT, () => {
 	console.log('Rentals server is listening on ' + PORT);
 });
 
-// io.on('connection', () => {
-// 	console.log('OKAY');
-// });
-
 chat.initListeners(io);

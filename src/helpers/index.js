@@ -1,1 +1,1 @@
-module.exports = { user: require('./user') };
+module.exports = { user: require('./user'), response: require('./response') };

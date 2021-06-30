@@ -1,4 +1,4 @@
-const { Conversation } = require('../models');
+const { Conversation, Message } = require('../models');
 const { User } = require('../../user-management');
 
 async function getOrCreate(participants) {
@@ -21,4 +21,68 @@ async function getOrCreate(participants) {
 	}
 }
 
-module.exports = { getOrCreate };
+async function remove(conversationId) {
+	try {
+		await Conversation.findOneAndDelete({ _id: conversationId });
+		return;
+	} catch (error) {
+		throw error;
+	}
+}
+
+async function getAll(userId) {
+	try {
+		const conversations = await Conversation.find()
+			.where('participants')
+			.all([userId])
+			.populate({
+				path: 'participants',
+				select: 'name email imageUrl',
+				match: { _id: { $nte: userId } }
+			})
+			.populate({
+				path: 'messages',
+				perDocumentLimit: 10
+			})
+			.exec();
+		return conversations;
+	} catch (error) {
+		throw error;
+	}
+}
+
+async function getConversationMessages(conversationId, offset) {
+	try {
+		const messages = await Message.find({ conversation: conversationId })
+			.select('-__v')
+			.skip(parseInt(offset))
+			.limit(10)
+			.exec();
+		return messages;
+	} catch (error) {
+		throw error;
+	}
+}
+
+async function getConversation({ conversationId, userId }) {
+	try {
+		return await Conversation.findById(conversationId)
+			.populate({ path: 'messages', perDocumentLimit: 10 })
+			.populate({
+				path: 'participants',
+				match: { _id: { $nte: userId } },
+				select: 'name email imageUrl -__v'
+			})
+			.exec();
+	} catch (error) {
+		throw error;
+	}
+}
+
+module.exports = {
+	getOrCreate,
+	remove,
+	getAll,
+	getConversationMessages,
+	getConversation
+};

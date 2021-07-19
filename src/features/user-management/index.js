@@ -1,1 +1,4 @@
-module.exports = { User: require('./model') };
+module.exports = {
+	User: require('./model'),
+	middleware: require('./middlewares')
+};

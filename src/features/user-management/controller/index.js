@@ -12,6 +12,7 @@ const User = require('../model/User');
 
 async function register(req, res) {
 	const { body } = req;
+	console.log(body);
 	try {
 		const { exists } = await emailExists(body);
 		if (!exists) {
@@ -39,9 +40,7 @@ async function authenticate(req, res) {
 		if (exists) {
 			const { correct, userId } = await passwordCorrect(body);
 			if (correct) {
-				const token = jwt.sign({ userId }, config.jwtSecret, {
-					expiresIn: '7d'
-				});
+				const token = jwt.sign({ userId }, config.jwtSecret);
 				return res.json({
 					authenticated: true,
 					token

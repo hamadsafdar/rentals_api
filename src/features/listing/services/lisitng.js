@@ -1,4 +1,5 @@
-const { Listing, Amenity, Address, Review } = require('../models');
+const { Listing, Amenity, Address, Review, Booking } = require('../models');
+const helper = require('../../../helpers');
 
 //TODO: Edit
 //host will also be the creator of listing
@@ -19,11 +20,13 @@ async function create({
 			province: location.province,
 			city: location.city,
 			zipCode: location.zipCode,
-			longitude: location.longitude,
-			latitude: location.latitude
+			longitude: location?.longitude || 0.0,
+			latitude: location?.latitude || 0.0
 		}).save();
 
-		const amenities = await Amenity.collection.insertMany(rAmenities);
+		const amenities =
+			[] || (await Amenity.collection.insertMany(rAmenities));
+
 		await new Listing({
 			title,
 			description,
@@ -31,11 +34,12 @@ async function create({
 			rate,
 			guestsLimit,
 			host: hostId,
-			amenities: Object.keys(amenities.insertedIds).map(
-				(key) => amenities.insertedIds[key]
-			),
+			// amenities: Object.keys(amenities.insertedIds).map(
+			// 	(key) => amenities.insertedIds[key]
+			// ),
 			address: address._id
 		}).save();
+
 		return;
 	} catch (error) {
 		throw error;
@@ -101,12 +105,34 @@ async function getRandomListings(hostId) {
 			.ne(hostId)
 			.limit(10)
 			.populate({ path: 'address' })
-			.populate({ path: 'amenity' })
+			.populate({ path: 'amenities' })
 			.populate({ path: 'address' })
 			.populate({ path: 'reviews' })
 			.populate({ path: 'host', select: 'name email imageUrl' })
 			.exec();
 		return listings;
+	} catch (error) {
+		throw error;
+	}
+}
+
+async function getListingsByCity(city, hostId) {
+	try {
+		const listings = await Listing.find()
+			.where('host')
+			.ne(hostId)
+			.limit(10)
+			.populate({ path: 'address' })
+			.populate({ path: 'amenities' })
+			.populate({ path: 'address' })
+			.populate({ path: 'reviews' })
+			.populate({ path: 'host', select: 'name email imageUrl' })
+			.exec();
+
+		const cityListings = listings.filter(
+			(listing) => listing.address.city === city
+		);
+		return cityListings;
 	} catch (error) {
 		throw error;
 	}
@@ -126,7 +152,7 @@ async function reviewListing({ listingId, review }) {
 	}
 }
 
-async function bookListing({ listingId, bookingDetails }) {}
+async function bookListing({ listingId, bookingDetails, bookedBy }) {}
 
 async function getBookingsByListing(listingId) {}
 
@@ -142,5 +168,6 @@ module.exports = {
 	remove,
 	getHostedListings,
 	create,
-	reviewListing
+	reviewListing,
+	getListingsByCity
 };

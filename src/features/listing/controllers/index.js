@@ -1,1 +1,4 @@
-module.exports = require('./listing');
+module.exports = {
+	listing: require('./listing'),
+	booking: require('./booking')
+};

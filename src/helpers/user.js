@@ -9,4 +9,12 @@ async function getUserByEmail(email) {
 	}
 }
 
-module.exports = { getUserByEmail };
+async function getUserById(userId) {
+	try {
+		return await User.findById(userId);
+	} catch (error) {
+		throw error;
+	}
+}
+
+module.exports = { getUserByEmail, getUserById };

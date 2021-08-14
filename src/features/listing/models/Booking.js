@@ -6,7 +6,7 @@ const bookingSchema = new Schema(
 		end: { type: Date, required: true },
 		status: {
 			type: String,
-			enum: ['CONFIRMED', 'CANCELLED', 'COMPLETED', 'STARTED', 'PENIDNG'],
+			enum: ['CONFIRMED', 'CANCELLED', 'COMPLETED', 'STARTED', 'PENDING'],
 			default: 'PENDING'
 		},
 		listing: { type: Schema.Types.ObjectId, ref: 'listing' },

@@ -1,3 +1,4 @@
+const helpers = require('../../../helpers');
 const { Booking } = require('../models');
 
 const constants = Object.freeze({
@@ -8,16 +9,18 @@ const constants = Object.freeze({
 	CANCELLED: 'CANCELLED'
 });
 
-async function bookListing({ listingId, bookingDetails }) {
+async function bookListing({ listingId, bookingDetails, bookedBy }) {
 	try {
 		const booking = new Booking({
 			start: bookingDetails.startDate,
 			end: bookingDetails.endDate,
-			lisitng: listingId,
-			bookedBy: bookingDetails.bookedBy
+			listing: listingId,
+			bookedBy
 		});
 		const saved = await booking.save();
-		return saved._id;
+		const user = await helpers.user.getUserById(bookedBy);
+		await user.save();
+		return;
 	} catch (error) {
 		throw error;
 	}
@@ -45,20 +48,22 @@ async function changeStatus({ bookingId, updatedStatus }) {
 	}
 }
 
-async function getBookingsByUserAndStatus({ userId, status }) {
+async function getBookingsByUser(userId) {
 	try {
 		const pastBookings = await Booking.find({
-			bookedBy: userId,
-			status
+			bookedBy: userId
 		})
 			.populate({
 				path: 'listing',
-				select: ''
+				select: '-createdAt -updatedAt -__v',
+				populate: {
+					path: 'host'
+				}
 			})
-			.populate({
-				path: 'host',
-				select: ''
-			})
+			// .populate({
+			// 	path: 'host',
+			// 	select: ''
+			// })
 			.exec();
 		return pastBookings;
 	} catch (error) {
@@ -66,12 +71,12 @@ async function getBookingsByUserAndStatus({ userId, status }) {
 	}
 }
 
-async function getHostedBookings({ hostId }) {}
+async function getHostedBookings(hostId) {}
 
 module.exports = {
 	bookListing,
 	bookingAvailable,
 	changeStatus,
 	constants,
-	getBookingsByUserAndStatus
+	getBookingsByUser
 };

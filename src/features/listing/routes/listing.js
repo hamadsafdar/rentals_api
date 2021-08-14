@@ -1,12 +1,15 @@
 const router = require('express').Router();
 const { authToken } = require('../../user-management/middlewares');
-const controller = require('../controllers');
+const { listing, booking } = require('../controllers');
 
 router
-	.post('/', authToken, controller.create)
-	.get('/hosted', authToken, controller.getHostedLisitngs)
-	.get('/', authToken, controller.getRandomListings)
-	.get('/:listingId', authToken, controller.getListing)
+	.post('/booking', authToken, booking.bookListing)
+	.get('/booking', authToken, booking.getBookings)
+	.post('/', authToken, listing.create)
+	.get('/hosted', authToken, listing.getHostedLisitngs)
+	.get('/', authToken, listing.getRandomListings)
+	.post('/search', authToken, listing.getListingsByCity)
+	.get('/:listingId', authToken, listing.getListing)
 	.delete('/:listingId', authToken, (req, res) => {});
 
 module.exports = router;

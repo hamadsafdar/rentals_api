@@ -19,6 +19,7 @@ async function getRandomListings(req, res) {
 			listings
 		});
 	} catch (error) {
+		console.log(error);
 		return res.status(500).json({ message: 'INTERNAL_ERROR' });
 	}
 }
@@ -44,4 +45,23 @@ async function getListing(req, res) {
 	}
 }
 
-module.exports = { getListing, getHostedLisitngs, getRandomListings, create };
+async function getListingsByCity(req, res) {
+	try {
+		const listings = await listingServices.getListingsByCity(
+			req.body.city,
+			req.user.userId
+		);
+		return res.json({ listings });
+	} catch (error) {
+		console.log(error);
+		return res.status(500).json({ message: 'INTERNAL_ERROR' });
+	}
+}
+
+module.exports = {
+	getListing,
+	getHostedLisitngs,
+	getRandomListings,
+	create,
+	getListingsByCity
+};

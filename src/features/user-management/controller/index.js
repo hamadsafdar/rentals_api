@@ -41,9 +41,11 @@ async function authenticate(req, res) {
 			const { correct, userId } = await passwordCorrect(body);
 			if (correct) {
 				const token = jwt.sign({ userId }, config.jwtSecret);
+				const user = await getData(userId);
 				return res.json({
 					authenticated: true,
-					token
+					token,
+					user
 				});
 			} else {
 				return res.status(401).json({

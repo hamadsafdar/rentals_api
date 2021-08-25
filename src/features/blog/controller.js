@@ -3,7 +3,7 @@ const services = require('./services');
 async function create(req, res) {
 	try {
 		const blog = req.body;
-		await services.create({ ...blog, author: req.userId });
+		await services.create({ ...blog, author: req.user.userId });
 		return res.status(201).json({
 			message: 'BLOG_POSTED'
 		});
@@ -15,7 +15,7 @@ async function create(req, res) {
 async function remove(req, res) {
 	try {
 		const blogId = req.params.blogId;
-		await services.remove(blogId);
+		await services.remove(blogId, req.user.userId);
 	} catch (error) {
 		return res.status(500).json({ message: 'INTERNAL_ERROR' });
 	}
@@ -23,7 +23,7 @@ async function remove(req, res) {
 
 async function getRandom(req, res) {
 	try {
-		const blogs = await services.getRandom(req.userId);
+		const blogs = await services.getRandom(req.user.userId);
 		return res.json({
 			blogs
 		});
@@ -34,7 +34,7 @@ async function getRandom(req, res) {
 
 async function getOwn(req, res) {
 	try {
-		const blogs = await services.getOwn(req.userId);
+		const blogs = await services.getOwn(req.user.userId);
 		return res.json({
 			blogs
 		});

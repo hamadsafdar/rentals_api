@@ -7,7 +7,7 @@ const listingSchema = new Schema(
 		images: [{ type: String }],
 		rate: { type: Schema.Types.Decimal128, required: true },
 		guestsLimit: { type: Number, required: true },
-		host: { type: Schema.Types.ObjectId, ref: 'User' },
+		host: { type: Schema.Types.ObjectId, ref: 'user' },
 		reviews: [{ type: Schema.Types.ObjectId, ref: 'review' }],
 		amenities: [{ type: Schema.Types.ObjectId, ref: 'amenity' }],
 		address: { type: Schema.Types.ObjectId, ref: 'address' }

@@ -25,7 +25,8 @@ async function createOrUpdate({ email, socketId }) {
 
 async function remove(socketId) {
 	try {
-		await SocketMap.updateOne({ id: socketId }, { id: null });
+		await SocketMap.findOneAndDelete({ id: socketId });
+		// await SocketMap.({ id: socketId }, { id: null });
 		return;
 	} catch (error) {
 		throw error;

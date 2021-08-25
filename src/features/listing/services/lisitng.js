@@ -122,12 +122,13 @@ async function getListingsByCity(city, hostId) {
 			.where('host')
 			.ne(hostId)
 			.limit(10)
+			.populate({ path: 'host' })
 			.populate({ path: 'address' })
 			.populate({ path: 'amenities' })
 			.populate({ path: 'address' })
 			.populate({ path: 'reviews' })
-			.populate({ path: 'host', select: 'name email imageUrl' })
 			.exec();
+		
 
 		const cityListings = listings.filter(
 			(listing) => listing.address.city === city

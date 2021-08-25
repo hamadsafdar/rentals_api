@@ -1,8 +1,8 @@
 const events = require('../events');
+const mid = require('../../../middlewares/socket-auth');
 
 module.exports = (io) => {
-	io.on('connection', (socket) => {
-		console.warn('connected');
+	io.use(mid).on('connection', (socket) => {
 		events.onRegister(socket);
 		events.onMessage(socket);
 		events.onDisconnect(socket);

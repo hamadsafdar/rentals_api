@@ -13,9 +13,23 @@ async function getRandom(userId) {
 	}
 }
 
-async function create({ content, title, author }) {
+async function create({
+	content,
+	title,
+	author,
+	imageUrl,
+	shortDescription,
+	city
+}) {
 	try {
-		const newBlog = new Blog({ content, title, author });
+		const newBlog = new Blog({
+			content,
+			title,
+			author,
+			imageUrl,
+			city,
+			shortDescription
+		});
 		return await newBlog.save();
 	} catch (error) {
 		throw error;
@@ -39,7 +53,10 @@ async function get(blogId) {
 async function remove(blogId, userId) {
 	try {
 		//verify if owner
-		return await Blog.findByIdAndDelete(blogId);
+		return await Blog.findByIdAndDelete(blogId)
+			.where('author')
+			.ne(userId)
+			.exec();
 	} catch (error) {
 		throw error;
 	}

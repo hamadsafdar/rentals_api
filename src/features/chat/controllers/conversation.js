@@ -23,7 +23,7 @@ async function deleteConversation(req, res) {
 
 async function getConversation(req, res) {
 	let conversationId = req.params.conversationId;
-	let userId = ''; //req.decoded.userId
+	let userId = req.user.userId; //req.decoded.userId
 	try {
 		const conversation = await services.conversation.getConversation({
 			conversationId,
@@ -31,6 +31,7 @@ async function getConversation(req, res) {
 		});
 		return res.json({ conversation });
 	} catch (error) {
+		console.log(error);
 		return helper.response.send500(res);
 	}
 }

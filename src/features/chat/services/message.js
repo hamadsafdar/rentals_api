@@ -8,7 +8,7 @@ async function createMessage({ body, author, conversationId }) {
 			conversation: conversationId
 		});
 		const stored = await msg.save();
-		return stored._id;
+		return Message.findById(stored._id).populate({ path: 'author' }).exec();
 	} catch (error) {
 		console.log(error);
 	}

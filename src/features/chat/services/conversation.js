@@ -4,15 +4,34 @@ const { User } = require('../../user-management');
 async function getOrCreate(participants) {
 	try {
 		const users = await User.find().where('email').in(participants).exec();
-		const conversation = await Conversation.findOne()
+		let conversation = await Conversation.findOne()
 			.where('participants')
 			.all([users[0]._id, users[1]._id])
+			.populate({
+				path: 'participants',
+				select: 'name email imageUrl -_id'
+			})
+			.populate({
+				path: 'messages',
+				select: 'author body createdAt _id'
+			})
 			.exec();
 		if (!conversation) {
 			const newConvo = new Conversation({
 				participants: [users[0]._id, users[1]._id]
 			});
-			return await newConvo.save();
+			conversation = await newConvo.save();
+
+			return await Conversation.findById(conversation._id)
+				.populate({
+					path: 'participants',
+					select: 'name email imageUrl -_id'
+				})
+				.populate({
+					path: 'messages',
+					select: 'author body createdAt _id'
+				})
+				.exec();
 		} else {
 			return conversation;
 		}
@@ -67,11 +86,11 @@ async function getConversationMessages(conversationId, offset) {
 async function getConversation({ conversationId, userId }) {
 	try {
 		return await Conversation.findById(conversationId)
-			.populate({ path: 'messages', perDocumentLimit: 10 })
+			.populate({ path: 'messages', populate: { path: 'author' } })
 			.populate({
 				path: 'participants',
-				match: { _id: { $nte: userId } },
-				select: 'name email imageUrl -__v'
+				// match: { _id: { $nte: userId } },
+				select: '+name +email +imageUrl -__v'
 			})
 			.exec();
 	} catch (error) {

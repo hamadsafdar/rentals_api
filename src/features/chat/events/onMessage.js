@@ -4,16 +4,19 @@ const send = require('./sendMessageToUser');
 
 module.exports = async (socket) => {
 	socket.on('message', async ({ body, to, from }, acknowledgement) => {
-		socket.emit('test');
-		const convo = await services.conversation.getOrCreate([to, from]);
-		const newMessageId = await services.message.createMessage({
-			author: socket.user.userId,
-			body,
-			conversationId: convo._id
-		});
-		convo.messages.push(newMessageId);
-		await convo.save();
-		send(socket, { from, to, message: body });
-		acknowledgement(newMessageId);
+		try {
+			const convo = await services.conversation.getOrCreate([to, from]);
+			const newMessage = await services.message.createMessage({
+				author: socket.user.userId,
+				body,
+				conversationId: convo._id
+			});
+			convo.messages.push(newMessage._id);
+			await convo.save();
+			send(socket, newMessage, to);
+			acknowledgement(newMessage);
+		} catch (error) {
+			console.log('message event', error);
+		}
 	});
 };

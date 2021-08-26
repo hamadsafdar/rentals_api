@@ -1,7 +1,7 @@
 const services = require('../services');
 
-module.exports = async (socket, { message, from, to }) => {
+module.exports = async (socket, message, to) => {
 	const socketId = await services.socket.getId(to);
-	console.log(socketId);
-	socket.to(socketId).emit('new-message', { message, from });
+	console.log(message);
+	socket.to(socketId).emit('new-message', message);
 };

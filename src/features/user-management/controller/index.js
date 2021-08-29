@@ -12,7 +12,7 @@ const User = require('../model/User');
 
 async function register(req, res) {
 	const { body } = req;
-	console.log(body);
+
 	try {
 		const { exists } = await emailExists(body);
 		if (!exists) {

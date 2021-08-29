@@ -3,6 +3,7 @@ const services = require('./services');
 async function create(req, res) {
 	try {
 		const blog = req.body;
+		console.log(blog);
 		await services.create({ ...blog, author: req.user.userId });
 		return res.status(201).json({
 			message: 'BLOG_POSTED'

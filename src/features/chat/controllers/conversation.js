@@ -3,10 +3,11 @@ const helper = require('../../../helpers');
 
 async function getUserConversations(req, res) {
 	try {
-		let userId = ''; // req.decoded.userId
+		let userId = req.user.userId;
 		const conversations = await services.conversation.getAll(userId);
 		res.json({ conversations });
 	} catch (error) {
+		console.log(error);
 		res.status(500).json({ message: 'INTERNAL_ERROR' });
 	}
 }

@@ -11,20 +11,32 @@ const constants = Object.freeze({
 
 async function bookListing({ listingId, bookingDetails, bookedBy }) {
 	try {
-		const booking = new Booking({
-			start: bookingDetails.startDate,
-			end: bookingDetails.endDate,
-			listing: listingId,
-			bookedBy
-		});
-		const saved = await booking.save();
-		const user = await helpers.user.getUserById(bookedBy);
-		await user.save();
-		return;
+		const { startDate, endDate } = bookingDetails;
+		const bookings = await Booking.find({ listing: listingId });
+
+		const isAvailable = bookings.every(
+			(booking) => startDate <= booking.end && endDate >= booking.start
+		);
+		console.log('Is Booking Available:', isAvailable);
+		if (isAvailable) {
+			const booking = new Booking({
+				start: bookingDetails.startDate,
+				end: bookingDetails.endDate,
+				listing: listingId,
+				bookedBy
+			});
+			const saved = await booking.save();
+			const user = await helpers.user.getUserById(bookedBy);
+			await user.save();
+			return true;
+		}
+		return false;
 	} catch (error) {
 		throw error;
 	}
 }
+
+async function getInvoice(listingId) {}
 
 async function bookingAvailable({ listingId, bookingDetails }) {
 	try {
@@ -60,10 +72,6 @@ async function getBookingsByUser(userId) {
 					path: 'host'
 				}
 			})
-			// .populate({
-			// 	path: 'host',
-			// 	select: ''
-			// })
 			.exec();
 		return pastBookings;
 	} catch (error) {
@@ -71,12 +79,23 @@ async function getBookingsByUser(userId) {
 	}
 }
 
-async function getHostedBookings(hostId) {}
+async function getHostedBookings(hostId) {
+	try {
+		const hostedBookings = await Booking.find({ host: hostId })
+			.populate({ path: 'listing' })
+			.populate({ path: 'bookedBy' })
+			.exec();
+		return hostedBookings;
+	} catch (error) {
+		throw error;
+	}
+}
 
 module.exports = {
 	bookListing,
 	bookingAvailable,
 	changeStatus,
 	constants,
-	getBookingsByUser
+	getBookingsByUser,
+	getHostedBookings
 };

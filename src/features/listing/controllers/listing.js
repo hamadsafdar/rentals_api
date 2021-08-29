@@ -2,6 +2,7 @@ const { listing: listingServices } = require('../services');
 
 async function create(req, res) {
 	try {
+		console.warn(req.body);
 		await listingServices.create({ hostId: req.user.userId, ...req.body });
 		return res.sendStatus(201);
 	} catch (error) {

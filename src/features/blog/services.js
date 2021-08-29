@@ -2,25 +2,14 @@ const { Blog } = require('./models');
 
 async function getRandom(userId) {
 	try {
-		const blogs = await Blog.find()
-			.where('author')
-			.ne(userId)
-			.limit(10)
-			.exec();
+		const blogs = await Blog.find().limit(10).exec();
 		return blogs;
 	} catch (error) {
 		throw error;
 	}
 }
 
-async function create({
-	content,
-	title,
-	author,
-	imageUrl,
-	shortDescription,
-	city
-}) {
+async function create({ content, title, author, imageUrl, description, city }) {
 	try {
 		const newBlog = new Blog({
 			content,
@@ -28,7 +17,7 @@ async function create({
 			author,
 			imageUrl,
 			city,
-			shortDescription
+			description
 		});
 		return await newBlog.save();
 	} catch (error) {

@@ -5,12 +5,14 @@ const listingSchema = new Schema(
 		title: { type: String, required: true },
 		description: { type: String, required: true },
 		images: [{ type: String }],
-		rate: { type: Schema.Types.Decimal128, required: true },
+		rate: { type: Number, required: true },
 		guestsLimit: { type: Number, required: true },
 		host: { type: Schema.Types.ObjectId, ref: 'user' },
 		reviews: [{ type: Schema.Types.ObjectId, ref: 'review' }],
-		amenities: [{ type: Schema.Types.ObjectId, ref: 'amenity' }],
-		address: { type: Schema.Types.ObjectId, ref: 'address' }
+		amenities: { type: String },
+		address: { type: Schema.Types.ObjectId, ref: 'address' },
+		bedrooms: { type: Number, default: 0 },
+		bathrooms: { type: Number, default: 0 }
 	},
 	{ timestamps: true }
 );

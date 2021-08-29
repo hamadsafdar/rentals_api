@@ -6,8 +6,8 @@ const addressSchema = new Schema(
 		city: { type: String, required: true },
 		province: { type: String, required: true },
 		zipCode: { type: String, required: true },
-		longitude: { type: Schema.Types.Decimal128 },
-		latitude: { type: Schema.Types.Decimal128 }
+		longitude: { type: Number },
+		latitude: { type: Number }
 	},
 	{ timestamps: true }
 );

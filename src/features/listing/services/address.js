@@ -2,7 +2,7 @@ const { Address } = require('../models');
 
 async function create({ address, city, province, zip }) {
 	try {
-		const address = new Address({ addres, city, province, zip });
+		const address = new Address({ address, city, province, zip });
 		const saved = await address.save();
 		return { insertId: saved._id };
 	} catch (error) {

@@ -12,7 +12,9 @@ async function create({
 	rate,
 	guestsLimit,
 	address: location,
-	amenities: rAmenities
+	amenities: rAmenities,
+	bedrooms,
+	bathrooms
 }) {
 	try {
 		const address = await new Address({
@@ -24,20 +26,19 @@ async function create({
 			latitude: location?.latitude || 0.0
 		}).save();
 
-		const amenities =
-			[] || (await Amenity.collection.insertMany(rAmenities));
+		const amenities = JSON.stringify(rAmenities);
 
 		await new Listing({
 			title,
 			description,
-			imagesUrl,
+			images: imagesUrl,
 			rate,
 			guestsLimit,
 			host: hostId,
-			// amenities: Object.keys(amenities.insertedIds).map(
-			// 	(key) => amenities.insertedIds[key]
-			// ),
-			address: address._id
+			amenities,
+			address: address._id,
+			bedrooms,
+			bathrooms
 		}).save();
 
 		return;
@@ -60,12 +61,10 @@ async function get(listingId) {
 				}
 			})
 			.populate({
-				path: 'amenities'
-			})
-			.populate({
 				path: 'address'
 			})
 			.exec();
+		console.log(listing);
 		return listing;
 	} catch (error) {
 		throw error;
@@ -77,9 +76,9 @@ async function getHostedListings(hostId) {
 		const listings = await Listing.find({ host: hostId })
 			.select('-host')
 			.populate({ path: 'address', select: '-createdAt -updatedAt -__v' })
-			.populate({ path: 'amenities' })
 			.populate({ path: 'reviews' })
 			.exec();
+
 		return listings;
 	} catch (error) {
 		throw error;
@@ -105,7 +104,6 @@ async function getRandomListings(hostId) {
 			.ne(hostId)
 			.limit(10)
 			.populate({ path: 'address' })
-			.populate({ path: 'amenities' })
 			.populate({ path: 'address' })
 			.populate({ path: 'reviews' })
 			.populate({ path: 'host', select: 'name email imageUrl' })
@@ -124,11 +122,9 @@ async function getListingsByCity(city, hostId) {
 			.limit(10)
 			.populate({ path: 'host' })
 			.populate({ path: 'address' })
-			.populate({ path: 'amenities' })
 			.populate({ path: 'address' })
 			.populate({ path: 'reviews' })
 			.exec();
-		
 
 		const cityListings = listings.filter(
 			(listing) => listing.address.city === city
